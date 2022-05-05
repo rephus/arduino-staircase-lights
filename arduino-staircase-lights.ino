@@ -4,7 +4,6 @@
 void setup() {
     pinMode(RELAY, OUTPUT);
   digitalWrite(RELAY, LOW);
- // Serial.begin(9600);
 
 }
 
@@ -23,11 +22,12 @@ void loop() {
     // This number will overflow (go back to zero), after approximately 50 days.
     lastTimeDetected= millis() ; 
   }
-  /*Serial.print("sensor");
-  Serial.println(sensorValue);
-  Serial.print("lastTimeDetected");
-  Serial.println(lastTimeDetected);
-*/
+
+  if (millis() < 1000 && lastTimeDetected > 0) { // Reset on rollover 
+    digitalWrite(RELAY, LOW);
+    lastTimeDetected = 0 
+  }
+
   if (lastTimeDetected + TIME_TO_WAIT < millis() ) {
     digitalWrite(RELAY, LOW);
 
