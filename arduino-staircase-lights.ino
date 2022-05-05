@@ -2,25 +2,36 @@
 #define RELAY 10
 
 void setup() {
-  // initialize digital pin LED_BUILTIN as an output.
     pinMode(RELAY, OUTPUT);
   digitalWrite(RELAY, LOW);
+ // Serial.begin(9600);
 
 }
+
+unsigned long lastTimeDetected=0; 
+#define TIME_TO_WAIT 60000
 
 // the loop function runs over and over again forever
 void loop() {
 
   int sensorValue = digitalRead(IR_RECEIVER);
-  // print out the value you read:
-  delay(10);        // delay in between reads for stability
 
   if (sensorValue == 0 ) {
     digitalWrite(RELAY, HIGH);   // turn the LED on (HIGH is the voltage level)
-    delay(5000);
+
+    // millis(): Returns the number of milliseconds passed since the Arduino board began running the current program. 
+    // This number will overflow (go back to zero), after approximately 50 days.
+    lastTimeDetected= millis() ; 
   }
-  else {
+  /*Serial.print("sensor");
+  Serial.println(sensorValue);
+  Serial.print("lastTimeDetected");
+  Serial.println(lastTimeDetected);
+*/
+  if (lastTimeDetected + TIME_TO_WAIT < millis() ) {
     digitalWrite(RELAY, LOW);
 
   }
+  delay(100);
+
 }
