@@ -13,6 +13,16 @@ unsigned long lastTimeDetected=0;
 // the loop function runs over and over again forever
 void loop() {
 
+/**
+  lastTimeDetected should always be >= than millis()
+  if this is not the case, is because millis() had an overflow
+  and it is starting from 0 again
+**/
+  if (millis() < lastTimeDetected) { // Reset on rollover 
+    digitalWrite(RELAY, LOW);
+    lastTimeDetected = 0 
+  }
+  
   int sensorValue = digitalRead(IR_RECEIVER);
 
   if (sensorValue == 0 ) {
@@ -21,11 +31,6 @@ void loop() {
     // millis(): Returns the number of milliseconds passed since the Arduino board began running the current program. 
     // This number will overflow (go back to zero), after approximately 50 days.
     lastTimeDetected= millis() ; 
-  }
-
-  if (millis() < 1000 && lastTimeDetected > 0) { // Reset on rollover 
-    digitalWrite(RELAY, LOW);
-    lastTimeDetected = 0 
   }
 
   if (lastTimeDetected + TIME_TO_WAIT < millis() ) {
