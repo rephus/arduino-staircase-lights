@@ -20,7 +20,7 @@ void loop() {
 **/
   if (millis() < lastTimeDetected) { // Reset on rollover 
     digitalWrite(RELAY, LOW);
-    lastTimeDetected = 0 
+    lastTimeDetected = 0;
   }
   
   int sensorValue = digitalRead(IR_RECEIVER);
