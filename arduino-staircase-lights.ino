@@ -4,7 +4,6 @@
 void setup() {
     pinMode(RELAY, OUTPUT);
   digitalWrite(RELAY, LOW);
- // Serial.begin(9600);
 
 }
 
@@ -14,6 +13,16 @@ unsigned long lastTimeDetected=0;
 // the loop function runs over and over again forever
 void loop() {
 
+/**
+  lastTimeDetected should always be >= than millis()
+  if this is not the case, is because millis() had an overflow
+  and it is starting from 0 again
+**/
+  if (millis() < lastTimeDetected) { // Reset on rollover 
+    digitalWrite(RELAY, LOW);
+    lastTimeDetected = 0;
+  }
+  
   int sensorValue = digitalRead(IR_RECEIVER);
 
   if (sensorValue == 0 ) {
@@ -23,11 +32,7 @@ void loop() {
     // This number will overflow (go back to zero), after approximately 50 days.
     lastTimeDetected= millis() ; 
   }
-  /*Serial.print("sensor");
-  Serial.println(sensorValue);
-  Serial.print("lastTimeDetected");
-  Serial.println(lastTimeDetected);
-*/
+
   if (lastTimeDetected + TIME_TO_WAIT < millis() ) {
     digitalWrite(RELAY, LOW);
 
